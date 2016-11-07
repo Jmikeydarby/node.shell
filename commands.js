@@ -6,10 +6,10 @@ var request = require('request');
 
 module.exports = {
 	pwd: function(file, done) {
-		done("\n" + process.cwd());
+		done(process.cwd());
 	},
 	date: function(file, done) {
-		done("\n" + new Date());
+		done(Date());
 	},
 	ls: function(file, done){
 		var output = "";
@@ -115,9 +115,14 @@ module.exports = {
 			}
 		}
 		request(str, function (error, response, body) {
-			if (!error && response.statusCode == 200) {
-				done("Requesting");    
-				done(body); // Show the HTML for the Google homepage.  
+			if (error) throw err;
+			else if (response && (response.statusCode > 399)){
+				throw new Error(response.statusCode);
+			}
+			if (body){
+				done(body);
+			}else{
+				done("");
 			}
 
 		})
